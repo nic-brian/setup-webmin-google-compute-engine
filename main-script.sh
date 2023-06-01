@@ -18,3 +18,4 @@ snap install --classic certbot
 ln -s /snap/bin/certbot /usr/bin/certbot
 gcloud compute firewall-rules create default-allow-webmin --action allow --target-tags webmin-server --source-ranges 0.0.0.0/0 --rules tcp:10000
 date
+passwd
