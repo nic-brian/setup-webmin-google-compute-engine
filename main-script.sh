@@ -78,15 +78,15 @@ rootpw=`tr -dc A-Za-z0-9 </dev/urandom | head -c 20`
 yes $rootpw | passwd
 
 # output summary information
-echo ********** IMPORTANT INFORMATION **********
+echo ========== IMPORTANT INFORMATION ==========
+echo Webmin URL: https://${vhost::-1}:10000
 echo Webmin username: root
 echo Webmin password: $rootpw
-echo Webmin URL: https://${vhost::-1}:10000
+echo WordPress URL: https://${vhost::-1}
+echo WordPress database: wp1
 echo WordPress database username: user1
 echo WordPress database password: $mariadbpw
-echo WordPress database: wp1
 echo WordPress database host: localhost
-echo WordPress URL: https://${vhost::-1}
-echo *******************************************
+echo ===========================================
 
 date
