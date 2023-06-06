@@ -2,14 +2,16 @@
 
 date
 cd /root
-apt update
-
-# set up a generic domain name for this instance
-vhost=`curl https://dgl-dns-wzwqo2bdfa-uw.a.run.app/`
 
 # get user's email address
 echo What is your email address?
 read email
+
+# update repositories
+apt update
+
+# set up a generic domain name for this instance
+vhost=`curl https://dgl-dns-wzwqo2bdfa-uw.a.run.app/`
 
 # install required packages
 curl -sSO https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh
