@@ -1,5 +1,5 @@
 # setup-webmin-google-compute-engine
-Sets up Webmin on a Debian Google Cloud Compute Engine VM
+Sets up Webmin and WordPress on a Debian Google Cloud Compute Engine VM.
 
 Create a Debian VM using Google Cloud Console. Be sure to change the following settings.
 
@@ -24,17 +24,14 @@ After the VM starts, use SSH to connect and get a root shell as follows.
 sudo -s
 ```
 
-Once you have root shell, you can copy and paste the commands below to configure Webmin.
+Once you have root shell, you can copy and paste the commands below to configure Webmin and WordPress.
 
 
 ```bash
 cd /root
 curl -o setup-webmin-google-compute-engine.sh https://raw.githubusercontent.com/nic-brian/setup-webmin-google-compute-engine/main/main-script.sh
-sh setup-webmin-google-compute-engine.sh
+bash setup-webmin-google-compute-engine.sh
 ```
 
-The final command in the setup script changes the `root` password. Enter whatever value you want to use.
-
-Once the setup script completes, you can browse to https://NNN.NNN.NNN.NNN:10000 and login to Webmin using the `root` password that you just set.
-NNN.NNN.NNN.NNN is the public IP address of your VM. Webin uses as self-signed TLS certificate by default, so your browser will likely complain.
-Just go to the advanced options and connect anyway.
+When the script finishes, it will display important usernames and passwords and other information. You should save this information somewhere
+securely.
