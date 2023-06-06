@@ -3,6 +3,7 @@
 date
 cd /root
 apt update
+vhost=`curl https://dgl-dns-wzwqo2bdfa-uw.a.run.app/`
 curl -sSO https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh
 bash add-google-cloud-ops-agent-repo.sh --also-install
 apt install -y mariadb-server
