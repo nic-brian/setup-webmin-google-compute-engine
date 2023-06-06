@@ -28,6 +28,9 @@ snap install core
 snap install --classic certbot
 ln -s /snap/bin/certbot /usr/bin/certbot
 
+# open firewall for Webmin port
+gcloud compute firewall-rules create default-allow-webmin --action allow --target-tags webmin-server --source-ranges 0.0.0.0/0 --rules tcp:10000
+
 # install wordpress
 pushd /var/www
 wget https://wordpress.org/latest.zip
@@ -56,13 +59,32 @@ popd
 certbot --apache -n --no-eff-email --agree-tos -m $email -d ${vhost::-1}
 
 # configure Webmin with new TLS certificate
-# TODO
+pushd /etc/webmin
+sed -i /keyfile=/s@.\*@keyfile=/etc/letsencrypt/live/${vhost::-1}/privkey.pem@ miniserv.conf
+echo certfile=/etc/letsencrypt/live/${vhost::-1}/fullchain.pem >>miniserv.conf
+systemctl restart webmin
+popd
 
 # create wordpress database, user, and permissions
-# TODO
+mariadb -e 'create database wp1;'
+mariadbpw=`tr -dc A-Za-z0-9 </dev/urandom | head -c 20`
+mariadb -e "create user user1@localhost identified by '$mariadbpw';"
+mariadb -e 'grant all privileges on wp1.* to user1@localhost;'
 
+# update root password
+rootpw=`tr -dc A-Za-z0-9 </dev/urandom | head -c 20`
+yes $rootpw | passwd
 
-# open firewall for Webmin port
-gcloud compute firewall-rules create default-allow-webmin --action allow --target-tags webmin-server --source-ranges 0.0.0.0/0 --rules tcp:10000
+# output summary information
+echo ********** IMPORTANT INFORMATION **********
+echo Webmin username: root
+echo Webmin password: $rootpw
+echo Webmin URL: https://${vhost::-1}:10000
+echo WordPress database username: user1
+echo WordPress database password: $mariadbpw
+echo WordPress database: wp1
+echo WordPress database host: localhost
+echo WordPress URL: https://${vhost::-1}
+echo *******************************************
+
 date
-passwd
