@@ -42,10 +42,10 @@ popd
 
 # create virtual host
 pushd /etc/apache2/sites-available
-cat <<EOF >${vhost}conf
+cat <<EOF >${vhost}.conf
 <VirtualHost *:80>
     DocumentRoot "/var/www/wordpress"
-    ServerName ${vhost::-1}
+    ServerName ${vhost}
     <Directory "/var/www/wordpress">
         Options None
         Require all granted
@@ -53,17 +53,17 @@ cat <<EOF >${vhost}conf
 </VirtualHost>
 EOF
 
-a2ensite ${vhost}conf
+a2ensite ${vhost}.conf
 systemctl reload apache2
 popd
 
 # provision TLS certificate
-certbot --apache -n --no-eff-email --agree-tos -m $email -d ${vhost::-1}
+certbot --apache -n --no-eff-email --agree-tos -m $email -d ${vhost}
 
 # configure Webmin with new TLS certificate
 pushd /etc/webmin
-sed -i /keyfile=/s@.\*@keyfile=/etc/letsencrypt/live/${vhost::-1}/privkey.pem@ miniserv.conf
-echo certfile=/etc/letsencrypt/live/${vhost::-1}/fullchain.pem >>miniserv.conf
+sed -i /keyfile=/s@.\*@keyfile=/etc/letsencrypt/live/${vhost}/privkey.pem@ miniserv.conf
+echo certfile=/etc/letsencrypt/live/${vhost}/fullchain.pem >>miniserv.conf
 systemctl restart webmin
 popd
 
@@ -79,10 +79,10 @@ yes $rootpw | passwd
 
 # output summary information
 echo ========== IMPORTANT INFORMATION ==========
-echo Webmin URL: https://${vhost::-1}:10000
+echo Webmin URL: https://${vhost}:10000
 echo Webmin username: root
 echo Webmin password: $rootpw
-echo WordPress URL: https://${vhost::-1}
+echo WordPress URL: https://${vhost}
 echo WordPress database: wp1
 echo WordPress database username: user1
 echo WordPress database password: $mariadbpw
